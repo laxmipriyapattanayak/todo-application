@@ -12,10 +12,12 @@ export default function App() {
     setItems((items) => items.filter((item) => item.id !== id));
   }
 
-  function handleUpdateItem(id) {
-    setItems((items) =>
+  function handleUpdateItem(id, updateInput) {
+    setItems(
       items.map((item) =>
-        item.id === id ? { ...item, update: !item.update } : item
+        item.id === id
+          ? { ...item, inputItem: updateInput, update: !item.update }
+          : item
       )
     );
   }
@@ -79,6 +81,7 @@ function TodoItemList({ items, onDeleteItem, onUpdateItem }) {
   );
 }
 function Item({ item, onDeleteItem, onUpdateItem }) {
+  const [updateInput, setUpdateInput] = useState(item.inputItem);
   return (
     <>
       <li>
@@ -86,14 +89,16 @@ function Item({ item, onDeleteItem, onUpdateItem }) {
         {item.update ? (
           <input
             type="text"
-            value={item.inputItem}
-            onChange={(e) => console.log(e.target.value)}
+            value={updateInput}
+            onChange={(e) => setUpdateInput(e.target.value)}
           />
         ) : (
           item.inputItem
         )}
         <button onClick={() => onDeleteItem(item.id)}>remove</button>
-        <button onClick={() => onUpdateItem(item.id)}>Update</button>
+        <button onClick={() => onUpdateItem(item.id, updateInput)}>
+          {item.update ? "save" : "update"}
+        </button>
       </li>
     </>
   );
